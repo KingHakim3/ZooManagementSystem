@@ -1,7 +1,23 @@
-﻿using System.Xml.Serialization;
+﻿using System.ComponentModel;
+using System.Xml.Serialization;
 
 namespace ZooManagementSystem
 {
+    class Animal
+    {
+        string name; string sex; int age; int weight;
+        public Animal(string name, string sex, int age, int weight)
+        {
+            this.name = name;
+            this.sex = sex;
+            this.age = age;
+            this.weight = weight;
+        }
+        public void DisplayAnimal()
+        {
+            Console.WriteLine($"Name: {name}, Sex: {sex}, Age: {age}, Weight: {weight}");
+        }
+    }
     class Program
     {
         static Animal Rhino;
@@ -86,3 +102,19 @@ namespace ZooManagementSystem
         }
     }
 }
+
+/*
+Meaningful comments
+Class(in addition to the class that contains Main)
+Arrays or Enums 
+Loops (any one of while, do-while and for loops)
+Methods  (one returning void, and one returning non-void; one instance and one static method, and these can be  combined, e.g., void/static, and non-void/instance)
+Constructor (at least one non-default constructor)
+Private and  public access modifiers
+Properties
+Interfaces
+File read/write
+Random number generators
+Collections
+Github
+*/
