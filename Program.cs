@@ -104,17 +104,26 @@ namespace ZooManagementSystem
 }
 
 /*
+- make it more game-like. shop, animal database, trainers with specific boosts, tasks to make money (stopwatch typing speed game, memory game, catch-the-animal luck game)
+- animal names randomized from a .txt file of a bunch of different options
+- rename feature for non-void method?
+- use enums for menu options
+- use interfaces & public/private access modifiers for animal-related methods
+
 Meaningful comments
-Class(in addition to the class that contains Main)
+Class (in addition to the class that contains Main)
 Arrays or Enums 
 Loops (any one of while, do-while and for loops)
-Methods  (one returning void, and one returning non-void; one instance and one static method, and these can be  combined, e.g., void/static, and non-void/instance)
+Methods (one returning void, and one returning non-void; one instance and one static method, and these can be combined, e.g., void/static, and non-void/instance)
 Constructor (at least one non-default constructor)
-Private and  public access modifiers
+Private and public access modifiers
 Properties
 Interfaces
 File read/write
 Random number generators
 Collections
 Github
+
+Recursion
+Inheritance
 */
