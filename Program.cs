@@ -5,98 +5,85 @@ namespace ZooManagementSystem
 {
     class Animal
     {
-        string name; string sex; int age; int weight;
-        public Animal(string name, string sex, int age, int weight)
+        public string name; public string species; public int money;
+        public Animal(string name, string species, int money)
         {
             this.name = name;
-            this.sex = sex;
-            this.age = age;
-            this.weight = weight;
+            this.species = species;
+            this.money = money;
         }
         public void DisplayAnimal()
         {
-            Console.WriteLine($"Name: {name}, Sex: {sex}, Age: {age}, Weight: {weight}");
+            Console.WriteLine($"{name} the {species}, $/s: {money}");
         }
     }
     class Program
     {
-        static Animal Rhino;
-        static Animal Elephant;
-        static Animal Giraffe;
+        static List<Animal> animals = new List<Animal>
+            {
+                new Animal("Rainier", "Rhino", 3),
+                new Animal("George", "Monkey", 1)
+            };
+        //creates a class-scope list of all of the user's animals
         static void WelcomeMenu()
         {
             Console.WriteLine("Please choose an option. \na) Animal Database \nb) Trainers");
-            string menuChoice = Console.ReadLine();
-            while (menuChoice != "a" && menuChoice != "b")
+            string menuChoice = Console.ReadLine().ToLower();
+            while (menuChoice != "a" && menuChoice != "b" && menuChoice != "c")
             {
                 Console.Write("Please input one of the options listed above.");
-                menuChoice = Console.ReadLine();
+                menuChoice = Console.ReadLine().ToLower();
             }
+            //Ensures that the user enters one of the options (a, A, b, B, c, C)
             switch (menuChoice)
             {
                 case "a":
-                    MenuChoiceA();
+                    Database();
                     break;
                 case "b":
-                    MenuChoiceB();
-                    break;
-                default:
-                    break;
-            }
-        }
-        static void MenuChoiceA()
-        {
-            Console.WriteLine("a) Rhino \nb) Elephant \nc) Giraffe \nd) Back");
-            string menuChoice = Console.ReadLine();
-            while (menuChoice != "a" && menuChoice != "b" && menuChoice != "c" && menuChoice != "d")
-            {
-                Console.Write("Please input one of the options listed above.");
-                menuChoice = Console.ReadLine();
-            }
-            switch (menuChoice)
-            {
-                case "a":
-                    Rhino.DisplayAnimal();
-                    break;
-                case "b":
-                    Elephant.DisplayAnimal();
+                    Shop();
                     break;
                 case "c":
-                    Giraffe.DisplayAnimal();
-                    break;
-                case "d":
-                    WelcomeMenu();
+                    SaveExit();
                     break;
                 default:
                     break;
             }
+            //calls the proper function based on the user's input
         }
-        static void MenuChoiceB()
+        public static void Database()
         {
-            Console.WriteLine("a) Jeremy \n b) Hilbert");
-            string menuChoice = Console.ReadLine();
-            while (menuChoice != "a" && menuChoice != "b")
+            Console.WriteLine();
+            for (int i = 0; i < animals.Count; i++)
             {
-                Console.Write("Please input one of the options listed above.");
-                menuChoice = Console.ReadLine();
+                Console.Write($"{i}. ");
+                animals[i].DisplayAnimal();
             }
-            switch (menuChoice)
+            Console.WriteLine("Press enter to return to the main menu.");
+            Console.ReadLine();
+            WelcomeMenu();
+        }
+        static void Shop()
+        {
+
+        }
+        static void SaveExit()
+        {
+            string saveInfo = SaveInfo();
+            File.WriteAllText("save.txt", saveInfo);
+        }
+        static string SaveInfo()
+        {
+            string saveInfo = "";
+            for (int i = 0; i < animals.Count; i++)
             {
-                case "a":
-                    Rhino.DisplayAnimal();
-                    break;
-                case "b":
-                    Elephant.DisplayAnimal();
-                    break;
-                default:
-                    break;
+                saveInfo += $"{animals[i].name} {animals[i].species} {animals[i].money}\n";
             }
+            Console.WriteLine(saveInfo);
+            return saveInfo;
         }
         static void Main(string[] args)
         {
-            Rhino = new Animal("Rainier", "F", 15, 360);
-            Elephant = new Animal("Eddy", "M", 23, 850);
-            Giraffe = new Animal("Rod", "M", 8, 240);
             Console.Write("Welcome to the Zoo Management System! ");
             WelcomeMenu();
         }
@@ -106,16 +93,15 @@ namespace ZooManagementSystem
 /*
 - make it more game-like. shop, animal database, trainers with specific boosts, tasks to make money (stopwatch typing speed game, memory game, catch-the-animal luck game)
 - animal names randomized from a .txt file of a bunch of different options
+- save function with .txt file
 - rename feature for non-void method?
-- use enums for menu options
+- use enums for animal species randomization
+- use lists to compile all user animals into one object
 - use interfaces & public/private access modifiers for animal-related methods
 
 Meaningful comments
-Class (in addition to the class that contains Main)
 Arrays or Enums 
-Loops (any one of while, do-while and for loops)
 Methods (one returning void, and one returning non-void; one instance and one static method, and these can be combined, e.g., void/static, and non-void/instance)
-Constructor (at least one non-default constructor)
 Private and public access modifiers
 Properties
 Interfaces
