@@ -6,16 +6,16 @@ namespace ZooManagementSystem
     class Animal
     {
         static Random rd = new Random();
-        public string name; public string species; public int money;
-        public Animal(string name, string species, int money)
+        public string name; public string species; public int income;
+        public Animal(string name, string species, int income)
         {
             this.name = name;
             this.species = species;
-            this.money = money;
+            this.income = income;
         }
         public void DisplayAnimal()
         {
-            Console.WriteLine($"{name} the {species}, $/s: {money}");
+            Console.WriteLine($"{name} the {species}, $/s: {income}");
         }
         static string RandomName()
         {
@@ -48,8 +48,8 @@ namespace ZooManagementSystem
         {
             string rName = RandomName();
             string rSpecies = RandomSpecies();
-            int rMoney = rd.Next(1, 7) * exoticness; //Gives a random value from 1 to 6            
-            return new Animal(rName, rSpecies, rMoney);
+            int rIncome = rd.Next(1, 7) * exoticness; //Gives a random value from 1 to 6            
+            return new Animal(rName, rSpecies, rIncome);
         }
     }
     class Program
@@ -73,7 +73,11 @@ namespace ZooManagementSystem
                     Database();
                     break;
                 case "b":
-                    Shop();
+                    if(animals.Count == 0)
+                    {
+                        FreeShop();
+                    }
+                    else Shop();
                     break;
                 case "c":
                     SaveExit();
@@ -90,10 +94,10 @@ namespace ZooManagementSystem
             {
                 for (int i = 0; i < animals.Count; i++)
                 {
-                    Console.Write($"{i}. ");
+                    Console.Write($"{i + 1}. ");
                     animals[i].DisplayAnimal();
                 }
-            } //If the user has animals, it displays their name, species, and money per second
+            } //If the user has animals, it displays their name, species, and income
             Console.WriteLine("Press enter to return to the main menu.");
             Console.ReadLine();
             Console.Clear();
@@ -104,14 +108,12 @@ namespace ZooManagementSystem
             Animal shopAnimal1 = Animal.RandomAnimal(1);
             Animal shopAnimal2 = Animal.RandomAnimal(2);
             Animal shopAnimal3 = Animal.RandomAnimal(3);
-            Console.WriteLine($"Welcome to the shop!" +
-                              $"\na) {shopAnimal1.name} the {shopAnimal1.species}" +
-                              $"\nb) {shopAnimal2.name} the {shopAnimal2.species}" + 
-                              $"\nc) {shopAnimal3.name} the {shopAnimal3.species}" +
+            Console.WriteLine($"Welcome to the shop!" + 
+                              $"\na) {shopAnimal1.name} the {shopAnimal1.species}, $50" +
+                              $"\nb) {shopAnimal2.name} the {shopAnimal2.species}, $150" +
+                              $"\nc) {shopAnimal3.name} the {shopAnimal3.species}, $250" +
                               $"\nd) Back to main menu");
-            //new Animal("Rainier", "Rhino", 3),
-            //new Animal("George", "Monkey", 1),
-            //new Animal("James", "Peach", 0)
+            
             string menuChoice = Console.ReadLine().ToLower();
             while (menuChoice != "a" && menuChoice != "b" && menuChoice != "c" && menuChoice != "d")
             {
@@ -122,23 +124,51 @@ namespace ZooManagementSystem
             switch (menuChoice)
             {
                 case "a":
-                    PurchaseConfirmation();
+                    PurchaseConfirmation(50);
                     break;
                 case "b":
-                    PurchaseConfirmation();
+                    PurchaseConfirmation(150);
                     break;
                 case "c":
-                    PurchaseConfirmation();
+                    PurchaseConfirmation(250);
                     break;
                 case "d":
                     MainMenu();
                     break;
-                default:
-                    break;
+                default: break;
             }
         }
-        static void PurchaseConfirmation()
+        static void FreeShop()
         {
+            Animal firstAnimal = new Animal("Rainier", "Rhino", 3);
+            Console.WriteLine($"Welcome to the shop!" +
+                $"\na) {firstAnimal.name} the {firstAnimal.species}, FREE" +
+                $"\nb) Back to main menu");
+            string menuChoice = Console.ReadLine().ToLower();
+            while (menuChoice != "a" && menuChoice != "b")
+            {
+                Console.Write("Please input one of the options listed above.");
+                menuChoice = Console.ReadLine().ToLower();
+            }
+            switch(menuChoice)
+            {
+                case "a":
+                    animals.Add(firstAnimal);
+                    Console.WriteLine($"Purchased {firstAnimal.name} the {firstAnimal.species}.");
+                    Console.ReadLine();
+                    Console.Clear();
+                    MainMenu();
+                    break;
+                case "b":
+                    Console.Clear();
+                    MainMenu();
+                    break;
+                default: break;
+            }
+        }
+        static void PurchaseConfirmation(int price)
+        {
+
             //Confirms the purchase, removes money from user's account and adds animal to the list of animals
             ShopRestock();
         }
@@ -153,14 +183,14 @@ namespace ZooManagementSystem
             //Writes the returned value of saveInfo to a .txt file
 
             Console.WriteLine("Saving . . .");
-            Console.WriteLine("Game successfully saved!");
+            Console.WriteLine("Data successfully saved!");
         }
         static string SaveInfo()
         {
             string saveInfo = "";
             for (int i = 0; i < animals.Count; i++)
             {
-                saveInfo += $"{animals[i].name}\n{animals[i].species}\n{animals[i].money}\n";
+                saveInfo += $"{animals[i].name}\n{animals[i].species}\n{animals[i].income}\n";
             }
             //Saves all animal data to one string, with several lines
             return saveInfo;
@@ -174,6 +204,7 @@ namespace ZooManagementSystem
                 using (StreamReader sr = new StreamReader("save.txt"))
                 {
                     //Reads save.txt line by line and reconstructs the animal objects
+                    int userMoney;
                     while ((line = sr.ReadLine()) != null)
                     {
                         string name = line.Trim();
@@ -183,18 +214,17 @@ namespace ZooManagementSystem
 
                         line = sr.ReadLine();
                         string mStr = line.Trim();
-                        int money = int.Parse(mStr);
+                        int income = int.Parse(mStr);
 
-                        animals.Add(new Animal(name, species, money));
-                        Console.Write($"Loaded: {name} the {species}, $/s: {money}");
+                        animals.Add(new Animal(name, species, income));
+                        Console.Write($"Loaded: {name} the {species}, $/s: {income}\n");
                         loadCount++;
                     }
                 }
             }
             if (loadCount == 0 || File.Exists("save.txt") == false)
                 Console.WriteLine("No saved animals found.\n");
-            else
-                Console.WriteLine("Loading complete.\n");
+            else Console.WriteLine("Loading complete.\n");
         }
         static void Main(string[] args)
         {
@@ -209,7 +239,7 @@ namespace ZooManagementSystem
     - when an animal is bought, another randomized animal should take its place in the shop
     - animal names randomized from a .txt file of a bunch of different options
     - use enums for animal species randomization
-- implement money system
-    - user should passively gain money from animals they own (the sum of all the owned animals' money field, per second)
-    - shop should accurately remove money from user's account
+- implement income system
+    - user should passively gain income from animals they own (the sum of all the owned animals' incomeStat field, per second)
+    - shop should accurately remove income from user's account
 */
