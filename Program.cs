@@ -22,12 +22,13 @@ namespace ZooManagementSystem
         static List<Animal> animals = new List<Animal>
             {
                 new Animal("Rainier", "Rhino", 3),
-                new Animal("George", "Monkey", 1)
+                new Animal("George", "Monkey", 1),
+                new Animal("James", "Peach", 0)
             };
         //creates a class-scope list of all of the user's animals
         static void WelcomeMenu()
         {
-            Console.WriteLine("Please choose an option. \na) Animal Database \nb) Trainers");
+            Console.WriteLine("Please choose an option. \na) Animal Database \nb) Shop \nc) Save");
             string menuChoice = Console.ReadLine().ToLower();
             while (menuChoice != "a" && menuChoice != "b" && menuChoice != "c")
             {
@@ -51,7 +52,7 @@ namespace ZooManagementSystem
             }
             //calls the proper function based on the user's input
         }
-        public static void Database()
+        static void Database()
         {
             Console.WriteLine();
             for (int i = 0; i < animals.Count; i++)
@@ -59,6 +60,7 @@ namespace ZooManagementSystem
                 Console.Write($"{i}. ");
                 animals[i].DisplayAnimal();
             }
+            //prints the info of each of the user's animals
             Console.WriteLine("Press enter to return to the main menu.");
             Console.ReadLine();
             WelcomeMenu();
@@ -71,19 +73,33 @@ namespace ZooManagementSystem
         {
             string saveInfo = SaveInfo();
             File.WriteAllText("save.txt", saveInfo);
+            Console.WriteLine("Saving . . .");
+            Console.WriteLine("Game successfully saved!");
         }
         static string SaveInfo()
         {
             string saveInfo = "";
             for (int i = 0; i < animals.Count; i++)
             {
-                saveInfo += $"{animals[i].name} {animals[i].species} {animals[i].money}\n";
+                saveInfo += $"{animals[i].name}\n{animals[i].species}\n{animals[i].money}\n";
             }
-            Console.WriteLine(saveInfo);
+            //saves all animal data to one string of separate lines
             return saveInfo;
+        }
+        static void LoadSave()
+        {
+            string line;
+            using (StreamReader sr = new StreamReader("save.txt"))
+            {
+                while ((line = sr.ReadLine()) != null)
+                {
+                    Console.WriteLine(line);
+                }
+            }  
         }
         static void Main(string[] args)
         {
+            LoadSave();
             Console.Write("Welcome to the Zoo Management System! ");
             WelcomeMenu();
         }
@@ -91,7 +107,6 @@ namespace ZooManagementSystem
 }
 
 /*
-- make it more game-like. shop, animal database, trainers with specific boosts, tasks to make money (stopwatch typing speed game, memory game, catch-the-animal luck game)
 - animal names randomized from a .txt file of a bunch of different options
 - save function with .txt file
 - rename feature for non-void method?
