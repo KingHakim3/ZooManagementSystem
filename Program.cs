@@ -239,6 +239,8 @@ namespace ZooManagementSystem
     - when an animal is bought, another randomized animal should take its place in the shop
     - animal names randomized from a .txt file of a bunch of different options
     - use enums for animal species randomization
+    - stack implementation for shop animal offers
+- hashset to prevent multiples when saving animal data
 - implement income system
     - user should passively gain income from animals they own (the sum of all the owned animals' incomeStat field, per second)
     - shop should accurately remove income from user's account
