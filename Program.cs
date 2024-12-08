@@ -22,17 +22,18 @@ namespace ZooManagementSystem
         static List<Animal> animals = new List<Animal>
             {
             };
-        //creates a class-scope list of all of the user's animals
-        static void WelcomeMenu()
+        //creates a list of all of the user's animals within the class scope. Purchased animals will be added to this list
+        static void MainMenu()
         {
-            Console.WriteLine("Please choose an option. \na) Animal Database \nb) Shop \nc) Save");
+            Console.WriteLine("Welcome to the Zoo Management System! Please choose an option. \na) Animal Database \nb) Shop \nc) Save and Exit");
             string menuChoice = Console.ReadLine().ToLower();
             while (menuChoice != "a" && menuChoice != "b" && menuChoice != "c")
             {
                 Console.Write("Please input one of the options listed above.");
                 menuChoice = Console.ReadLine().ToLower();
             }
-            //Ensures that the user enters one of the options (a, A, b, B, c, C)
+            Console.Clear();
+            //Prompts user for input. If they enter anything other than A, a, B, b, C, c, then it will return an error message and prompt them to enter another option.
             switch (menuChoice)
             {
                 case "a":
@@ -47,13 +48,13 @@ namespace ZooManagementSystem
                 default:
                     break;
             }
-            //calls the proper function based on the user's input
+            //Calls the function that corresponds to the user's input
         }
         static void Database()
         {
-            Console.WriteLine();
             if (animals.Count == 0)
                 Console.WriteLine("You don't own any animals. Visit the shop.");
+            //If the list of animals is empty, the user is prompted to visit the shop.
             else
             {
                 for (int i = 0; i < animals.Count; i++)
@@ -62,15 +63,16 @@ namespace ZooManagementSystem
                     animals[i].DisplayAnimal();
                 }
             }
-            //prints the info of each of the user's animals if they have any
+            //If the user has animals, it displays their name, species, and money per second
             Console.WriteLine("Press enter to return to the main menu.");
             Console.ReadLine();
-            WelcomeMenu();
+            Console.Clear();
+            MainMenu();
+            //Once the user hits the enter key, they are sent back to the main menu
         }
         static void Shop()
         {
-            Console.WriteLine("\nWelcome to the shop!");
-            Console.WriteLine("a) Rainier the Rhino");
+            Console.WriteLine("Welcome to the shop!\na) Rainier the Rhino\nb) \nc) \nd) Back to main menu");
             //new Animal("Rainier", "Rhino", 3),
             //new Animal("George", "Monkey", 1),
             //new Animal("James", "Peach", 0)
@@ -80,25 +82,42 @@ namespace ZooManagementSystem
                 Console.Write("Please input one of the options listed above.");
                 menuChoice = Console.ReadLine().ToLower();
             }
+            //Once again, requires the user to enter A, a, B, b, C, c, D, d to continue. Else, they are prompted to input a different option
+            Console.Clear();
             switch (menuChoice)
             {
                 case "a":
+                    PurchaseConfirmation();
                     break;
                 case "b":
+                    PurchaseConfirmation();
                     break;
                 case "c":
+                    PurchaseConfirmation();
                     break;
                 case "d":
+                    MainMenu();
                     break;
                 default:
                     break;
             }
         }
+        static void PurchaseConfirmation()
+        {
+            //Confirms the purchase, removes money from user's account and adds animal to the list of animals
+            ShopRestock();
+        }
+        static void ShopRestock()
+        {
+            //Once an animal is purchased, a new, randomized one should take its place in the shop.
+        }
         static void SaveExit()
         {
             string saveInfo = SaveInfo();
             File.WriteAllText("save.txt", saveInfo);
-            Console.WriteLine("\nSaving . . .");
+            //Writes the returned value of saveInfo to a .txt file
+
+            Console.WriteLine("Saving . . .");
             Console.WriteLine("Game successfully saved!");
         }
         static string SaveInfo()
@@ -108,18 +127,18 @@ namespace ZooManagementSystem
             {
                 saveInfo += $"{animals[i].name}\n{animals[i].species}\n{animals[i].money}\n";
             }
-            //saves all animal data to one string of separate lines
+            //Saves all animal data to one string, with several lines
             return saveInfo;
         }
         static void LoadSave()
         {
-            //reads save.txt line by line and reconstructs the animal objects
             string line;
             int loadCount = 0;
             if (File.Exists("save.txt"))
             {
                 using (StreamReader sr = new StreamReader("save.txt"))
                 {
+                    //Reads save.txt line by line and reconstructs the animal objects
                     while ((line = sr.ReadLine()) != null)
                     {
                         string name = line.Trim();
@@ -138,15 +157,14 @@ namespace ZooManagementSystem
                 }
             }
             if (loadCount == 0 || File.Exists("save.txt") == false)
-                Console.WriteLine("No save was loaded.\n");
+                Console.WriteLine("No saved animals found.\n");
             else
                 Console.WriteLine("Loading complete.\n");
         }
         static void Main(string[] args)
         {
             LoadSave();
-            Console.Write("Welcome to the Zoo Management System! ");
-            WelcomeMenu();
+            MainMenu();
         }
     }
 }
