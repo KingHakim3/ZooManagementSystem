@@ -21,9 +21,6 @@ namespace ZooManagementSystem
     {
         static List<Animal> animals = new List<Animal>
             {
-                new Animal("Rainier", "Rhino", 3),
-                new Animal("George", "Monkey", 1),
-                new Animal("James", "Peach", 0)
             };
         //creates a class-scope list of all of the user's animals
         static void WelcomeMenu()
@@ -55,25 +52,53 @@ namespace ZooManagementSystem
         static void Database()
         {
             Console.WriteLine();
-            for (int i = 0; i < animals.Count; i++)
+            if (animals.Count == 0)
+                Console.WriteLine("You don't own any animals. Visit the shop.");
+            else
             {
-                Console.Write($"{i}. ");
-                animals[i].DisplayAnimal();
+                for (int i = 0; i < animals.Count; i++)
+                {
+                    Console.Write($"{i}. ");
+                    animals[i].DisplayAnimal();
+                }
             }
-            //prints the info of each of the user's animals
+            //prints the info of each of the user's animals if they have any
             Console.WriteLine("Press enter to return to the main menu.");
             Console.ReadLine();
             WelcomeMenu();
         }
         static void Shop()
         {
-
+            Console.WriteLine("\nWelcome to the shop!");
+            Console.WriteLine("a) Rainier the Rhino");
+            //new Animal("Rainier", "Rhino", 3),
+            //new Animal("George", "Monkey", 1),
+            //new Animal("James", "Peach", 0)
+            string menuChoice = Console.ReadLine().ToLower();
+            while (menuChoice != "a" && menuChoice != "b" && menuChoice != "c" && menuChoice != "d")
+            {
+                Console.Write("Please input one of the options listed above.");
+                menuChoice = Console.ReadLine().ToLower();
+            }
+            switch (menuChoice)
+            {
+                case "a":
+                    break;
+                case "b":
+                    break;
+                case "c":
+                    break;
+                case "d":
+                    break;
+                default:
+                    break;
+            }
         }
         static void SaveExit()
         {
             string saveInfo = SaveInfo();
             File.WriteAllText("save.txt", saveInfo);
-            Console.WriteLine("Saving . . .");
+            Console.WriteLine("\nSaving . . .");
             Console.WriteLine("Game successfully saved!");
         }
         static string SaveInfo()
@@ -88,14 +113,34 @@ namespace ZooManagementSystem
         }
         static void LoadSave()
         {
+            //reads save.txt line by line and reconstructs the animal objects
             string line;
-            using (StreamReader sr = new StreamReader("save.txt"))
+            int loadCount = 0;
+            if (File.Exists("save.txt"))
             {
-                while ((line = sr.ReadLine()) != null)
+                using (StreamReader sr = new StreamReader("save.txt"))
                 {
-                    Console.WriteLine(line);
+                    while ((line = sr.ReadLine()) != null)
+                    {
+                        string name = line.Trim();
+
+                        line = sr.ReadLine();
+                        string species = line.Trim();
+
+                        line = sr.ReadLine();
+                        string mStr = line.Trim();
+                        int money = int.Parse(mStr);
+
+                        animals.Add(new Animal(name, species, money));
+                        Console.Write($"Loaded: {name} the {species}, $/s: {money}");
+                        loadCount++;
+                    }
                 }
-            }  
+            }
+            if (loadCount == 0 || File.Exists("save.txt") == false)
+                Console.WriteLine("No save was loaded.\n");
+            else
+                Console.WriteLine("Loading complete.\n");
         }
         static void Main(string[] args)
         {
@@ -107,24 +152,11 @@ namespace ZooManagementSystem
 }
 
 /*
-- animal names randomized from a .txt file of a bunch of different options
-- save function with .txt file
-- rename feature for non-void method?
-- use enums for animal species randomization
-- use lists to compile all user animals into one object
-- use interfaces & public/private access modifiers for animal-related methods
-
-Meaningful comments
-Arrays or Enums 
-Methods (one returning void, and one returning non-void; one instance and one static method, and these can be combined, e.g., void/static, and non-void/instance)
-Private and public access modifiers
-Properties
-Interfaces
-File read/write
-Random number generators
-Collections
-Github
-
-Recursion
-Inheritance
+- randomized animals in shop for set prices (3 options at a time, 1 small/cheap, 1 medium, 1 large/expensive)
+    - when an animal is bought, another randomized animal should take its place in the shop
+    - animal names randomized from a .txt file of a bunch of different options
+    - use enums for animal species randomization
+- implement money system
+    - user should passively gain money from animals they own (the sum of all the owned animals' money field, per second)
+    - shop should accurately remove money from user's account
 */
