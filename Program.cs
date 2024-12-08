@@ -5,6 +5,7 @@ namespace ZooManagementSystem
 {
     class Animal
     {
+        static Random rd = new Random();
         public string name; public string species; public int money;
         public Animal(string name, string species, int money)
         {
@@ -16,13 +17,46 @@ namespace ZooManagementSystem
         {
             Console.WriteLine($"{name} the {species}, $/s: {money}");
         }
+        static string RandomName()
+        {
+            if (File.Exists("names.txt"))
+            {
+                string[] lines = File.ReadAllLines("names.txt");
+                int n = rd.Next(lines.Length);
+                return lines[n];
+            } //Returns a random line from names.txt
+            else return "placeholder";
+        }
+        enum Species
+        {
+            Elephant,
+            Rhino,
+            Hippo,
+            Giraffe,
+            Cheetah,
+            Bear,
+            Eagle,
+            Whale
+        }
+        static string RandomSpecies()
+        {
+            string[] species = Enum.GetNames(typeof(Species));
+            int n = rd.Next(species.Length);
+            return species[n];
+        } //Returns a random species from the Species enum
+        public static Animal RandomAnimal(int exoticness)
+        {
+            string rName = RandomName();
+            string rSpecies = RandomSpecies();
+            int rMoney = rd.Next(1, 7) * exoticness; //Gives a random value from 1 to 6            
+            return new Animal(rName, rSpecies, rMoney);
+        }
     }
     class Program
     {
         static List<Animal> animals = new List<Animal>
             {
-            };
-        //creates a list of all of the user's animals within the class scope. Purchased animals will be added to this list
+            }; //creates a list of all of the user's animals within the class scope. Purchased animals will be added to this list
         static void MainMenu()
         {
             Console.WriteLine("Welcome to the Zoo Management System! Please choose an option. \na) Animal Database \nb) Shop \nc) Save and Exit");
@@ -31,9 +65,8 @@ namespace ZooManagementSystem
             {
                 Console.Write("Please input one of the options listed above.");
                 menuChoice = Console.ReadLine().ToLower();
-            }
+            } //Prompts user for input. If they enter anything other than A, a, B, b, C, c, then it will return an error message and prompt them to enter another option.
             Console.Clear();
-            //Prompts user for input. If they enter anything other than A, a, B, b, C, c, then it will return an error message and prompt them to enter another option.
             switch (menuChoice)
             {
                 case "a":
@@ -47,14 +80,12 @@ namespace ZooManagementSystem
                     break;
                 default:
                     break;
-            }
-            //Calls the function that corresponds to the user's input
+            } //Calls the function that corresponds to the user's input
         }
         static void Database()
         {
             if (animals.Count == 0)
-                Console.WriteLine("You don't own any animals. Visit the shop.");
-            //If the list of animals is empty, the user is prompted to visit the shop.
+                Console.WriteLine("You don't own any animals. Visit the shop."); //If the list of animals is empty, the user is prompted to visit the shop.
             else
             {
                 for (int i = 0; i < animals.Count; i++)
@@ -62,17 +93,22 @@ namespace ZooManagementSystem
                     Console.Write($"{i}. ");
                     animals[i].DisplayAnimal();
                 }
-            }
-            //If the user has animals, it displays their name, species, and money per second
+            } //If the user has animals, it displays their name, species, and money per second
             Console.WriteLine("Press enter to return to the main menu.");
             Console.ReadLine();
             Console.Clear();
-            MainMenu();
-            //Once the user hits the enter key, they are sent back to the main menu
+            MainMenu(); //Once the user hits the enter key, they are sent back to the main menu
         }
         static void Shop()
         {
-            Console.WriteLine("Welcome to the shop!\na) Rainier the Rhino\nb) \nc) \nd) Back to main menu");
+            Animal shopAnimal1 = Animal.RandomAnimal(1);
+            Animal shopAnimal2 = Animal.RandomAnimal(2);
+            Animal shopAnimal3 = Animal.RandomAnimal(3);
+            Console.WriteLine($"Welcome to the shop!" +
+                              $"\na) {shopAnimal1.name} the {shopAnimal1.species}" +
+                              $"\nb) {shopAnimal2.name} the {shopAnimal2.species}" + 
+                              $"\nc) {shopAnimal3.name} the {shopAnimal3.species}" +
+                              $"\nd) Back to main menu");
             //new Animal("Rainier", "Rhino", 3),
             //new Animal("George", "Monkey", 1),
             //new Animal("James", "Peach", 0)
@@ -81,8 +117,7 @@ namespace ZooManagementSystem
             {
                 Console.Write("Please input one of the options listed above.");
                 menuChoice = Console.ReadLine().ToLower();
-            }
-            //Once again, requires the user to enter A, a, B, b, C, c, D, d to continue. Else, they are prompted to input a different option
+            } //Once again, requires the user to enter A, a, B, b, C, c, D, d to continue. Else, they are prompted to input a different option
             Console.Clear();
             switch (menuChoice)
             {
